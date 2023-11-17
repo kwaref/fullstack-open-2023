@@ -13,6 +13,7 @@ function App() {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [mostVoted, setMostVoted] = useState(0)
   const [points, setPoints] = useState(Array(anecdotes.length).fill(0))
 
   const handleClick = () => {
@@ -23,10 +24,14 @@ function App() {
     const newPoints = [...points]
     newPoints[selected] += 1
     setPoints(newPoints)
+    const maximum = Math.max(...newPoints)
+    const idx = newPoints.indexOf(maximum)
+    setMostVoted(idx)
   }
 
   return (
     <>
+      <h1>Anecdote of the day</h1>
       <div>
         {anecdotes[selected]}
       </div>
@@ -36,6 +41,13 @@ function App() {
       <div>
         <button onClick={voteUp}>vote</button>
         <button onClick={handleClick}>next anecdote</button>
+      </div>
+      <h1>Anecdote with most votes</h1>
+      <div>
+        {anecdotes[mostVoted]}
+      </div>
+      <div>
+        {`has ${points[mostVoted]} ${points[mostVoted]!==1?'votes':'vote'}`}
       </div>
     </>
   )
