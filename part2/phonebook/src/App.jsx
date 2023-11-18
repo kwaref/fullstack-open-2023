@@ -6,10 +6,19 @@ const App = () => {
   ]) 
   const [newName, setNewName] = useState('')
 
+  const notIn = (str) => {
+    const names = persons.map( person => person.name.toLowerCase())
+    return !names.includes(str.toLowerCase())
+  }
+
   const handleSubmit = (evt) => {
     evt.preventDefault()
-    setPersons([...persons, { name: newName }])
-    setNewName('')
+    if (notIn(newName)) {
+      setPersons([...persons, { name: newName }])
+      setNewName('')
+    } else {
+      alert(`${newName} is already added to phonebook`)
+    }
   }
 
   const handleChange = (evt) => {
