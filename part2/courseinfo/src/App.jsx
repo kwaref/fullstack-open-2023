@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const Header = ({ course }) => <h1>{course}</h1>
 
-const Total = ({ sum }) => <p>Number of exercises {sum}</p>
+const Total = ({ sum }) => <h4>{`total of ${sum} exercises`}</h4>
 
 const Part = ({ part }) => 
   <p>
@@ -23,10 +23,16 @@ const Content = ({ parts }) =>
   </>
 
 const Course = ({course}) => {
-return (<>
-  <Header course={course.name} />
-  {course.parts.map(part => <Part key={part.name} part={part}/>)}
-</>)
+
+  const sum = () => {
+    return course.parts.reduce((ac, part) => ac + part.exercises, 0)
+  }
+
+  return (<>
+    <Header course={course.name} />
+    {course.parts.map(part => <Part key={part.name} part={part}/>)}
+    <Total sum={sum()} />
+  </>)
 }
 
 const App = () => {
