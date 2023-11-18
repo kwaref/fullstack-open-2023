@@ -1,39 +1,4 @@
-import { useState } from 'react'
-
-const Header = ({ course }) => <h1>{course}</h1>
-
-const Total = ({ sum }) => <h4>{`total of ${sum} exercises`}</h4>
-
-const Part = ({ part }) => 
-  <p>
-    {part.name} {part.exercises}
-  </p>
-
-const Content = ({ parts }) => 
-  <>
-    <Part
-      part={parts[0]} 
-    />
-    <Part
-      part={parts[1]} 
-    />
-    <Part
-      part={parts[2]} 
-    />      
-  </>
-
-const Course = ({course}) => {
-
-  const sum = () => {
-    return course.parts.reduce((ac, part) => ac + part.exercises, 0)
-  }
-
-  return (<>
-    <Header course={course.name} />
-    {course.parts.map(part => <Part key={part.name} part={part}/>)}
-    <Total sum={sum()} />
-  </>)
-}
+import { Course, Header } from "./course"
 
 const App = () => {
   const courses = [
