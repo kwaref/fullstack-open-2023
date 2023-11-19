@@ -19,24 +19,32 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-  const notIn = (str) => {
-    const names = persons.map( person => person.name.toLowerCase())
-    return !names.includes(str.toLowerCase())
-  }
+  // const notIn = (str) => {
+  //   const names = persons.map( person => person.name.toLowerCase())
+  //   return !names.includes(str.toLowerCase())
+  // }
 
   const handleSubmit = (evt) => {
     evt.preventDefault()
-    if (notIn(newName)) {
+    const found = persons.find(p => p.name === newName)
+    if (!found) {
       const person = { name: newName, number: newNumber }
       personService.create(person)
       .then(person => {
         setPersons([...persons, person])
       })
-      setNewName('')
-      setNewNumber('')
     } else {
-      alert(`${newName} is already added to phonebook`)
+      const result = confirm(`${newName} is already added to phonebook, replace the old number with this one?`)
+      if (result) {
+        personService.update(found.id, { name: newName, number: newNumber })
+        .then(person => {
+          const newPersons = persons.map( p => p.id === person.id ? person : p)
+          setPersons(newPersons)
+        })
+      }
     }
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleChange = (evt) => {
