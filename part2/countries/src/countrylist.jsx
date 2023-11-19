@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 
 export const Country = ({country}) => {
   return (
@@ -23,15 +23,29 @@ export const Country = ({country}) => {
 
 export const CountryList = ({ list }) => {
     const qtty = list.length
+
+    const [details, setDetails] = useState(null)
+
+    useEffect(() => {
+      setDetails(null)
+    }, [list])
+    
+
     if (qtty === 0) {
         return null
     }
     if (qtty > 1 && qtty <= 10){
-        return (<ul style={{listStyle: 'none', marginLeft: 0, paddingLeft: 0}}>
-        {
-            list.map(country => <li key={country.name.common}>{country.name.common}</li>)
-        }
-        </ul>)
+        return (
+        <>
+            <ul style={{listStyle: 'none', marginLeft: 0, paddingLeft: 0}}>
+            {
+                list.map(country => <li key={country.name.common}>{country.name.common} <button onClick={ () => setDetails(country)}>show</button></li>)
+            }
+            </ul>
+            {
+                details ? <Country country={details}/> : null
+            }
+        </>)
     }
     if (qtty === 1) {
         return (<Country country={list[0]} />)
