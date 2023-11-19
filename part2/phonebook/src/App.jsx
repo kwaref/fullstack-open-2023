@@ -2,16 +2,16 @@ import { useState, useEffect } from 'react'
 import { PersonList } from './persons'
 import { Filter } from './filter'
 import { PersonForm } from './personform'
-import axios from "axios"
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(persons => {
+        setPersons(persons)
       })
   }, [])
 
@@ -28,9 +28,9 @@ const App = () => {
     evt.preventDefault()
     if (notIn(newName)) {
       const person = { name: newName, number: newNumber }
-      axios.post('http://localhost:3001/persons', person)
-      .then(response => {
-        setPersons([...persons, response.data])
+      personService.create(person)
+      .then(person => {
+        setPersons([...persons, person])
       })
       setNewName('')
       setNewNumber('')
