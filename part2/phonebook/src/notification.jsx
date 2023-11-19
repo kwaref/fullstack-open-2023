@@ -1,7 +1,7 @@
-export const Notification = ({ message }) => {
+export const Notification = ({ message, error=false }) => {
     if (message === null) {
         return null
     }
 
-    return (<div className='success'>{message}</div>)
+    return (<div className={error ? 'error' : 'success' }>{message}</div>)
 }

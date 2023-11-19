@@ -8,6 +8,11 @@ import { Notification } from './notification'
 const App = () => {
   const [persons, setPersons] = useState([])
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [error, setError] = useState(false)
+
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
 
   useEffect(() => {
     personService
@@ -17,9 +22,6 @@ const App = () => {
       })
   }, [])
 
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [filter, setFilter] = useState('')
 
   const handleSubmit = (evt) => {
     evt.preventDefault()
@@ -44,6 +46,16 @@ const App = () => {
           setNotificationMessage(`Modified ${person.name}'s number`)
           setTimeout(()=>{
             setNotificationMessage(null)
+          }, 3000)
+        })
+        .catch(err => {
+          setError(true)
+          setNotificationMessage(`Information of ${found.name} has already been removed from server`)
+          setTimeout(()=>{
+            setNotificationMessage(null)
+            setError(false)
+            const newPersons = persons.filter(p=>p.id!==found.id)
+            setPersons(newPersons)
           }, 3000)
         })
       }
@@ -77,7 +89,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification message={notificationMessage} error={error} />
       <Filter value={filter} handleChange={handleChange}/>
       <h3>Add a new</h3>
       <PersonForm name={newName} number={newNumber} handleChange={handleChange} handleSubmit={handleSubmit} />
