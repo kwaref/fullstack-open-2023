@@ -27,7 +27,11 @@ const App = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault()
     if (notIn(newName)) {
-      setPersons([...persons, { name: newName, number: newNumber, id: persons.length > 0 ? persons[persons.length-1].id + 1 : 1}])
+      const person = { name: newName, number: newNumber }
+      axios.post('http://localhost:3001/persons', person)
+      .then(response => {
+        setPersons([...persons, response.data])
+      })
       setNewName('')
       setNewNumber('')
     } else {
