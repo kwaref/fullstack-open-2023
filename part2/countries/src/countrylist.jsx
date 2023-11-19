@@ -1,7 +1,20 @@
 import { useState, useEffect } from 'react'
+import weather from './services/weather'
 
 export const Country = ({country}) => {
-  return (
+
+    const [weatherData, setWeatherData] = useState(null)
+
+    useEffect(() => {
+        weather.get(country.capital)
+        .then(data=>{
+            setWeatherData(data)
+        })
+    }, [country])
+    
+
+
+    return (
     <>
         <h1>
             {country.name.common}
@@ -17,8 +30,18 @@ export const Country = ({country}) => {
         }
         </ul>
         <div>{country.flag}</div>
+        <div>
+            {
+                weatherData ? (<>
+                    <h3>Weather in {country.capital}</h3>
+                    <p>Temperature: {weatherData.main.temp} Celcius</p>
+                    <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} alt={`${weatherData.weather[0].description}`} />
+                    <p>Wind: {weatherData.wind.speed} m/s</p>
+                </>) : null
+            }
+        </div>
     </>
-  )
+    )
 }
 
 export const CountryList = ({ list }) => {
