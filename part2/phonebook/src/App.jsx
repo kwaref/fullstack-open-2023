@@ -3,9 +3,11 @@ import { PersonList } from './persons'
 import { Filter } from './filter'
 import { PersonForm } from './personform'
 import personService from './services/persons'
+import { Notification } from './notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -19,11 +21,6 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-  // const notIn = (str) => {
-  //   const names = persons.map( person => person.name.toLowerCase())
-  //   return !names.includes(str.toLowerCase())
-  // }
-
   const handleSubmit = (evt) => {
     evt.preventDefault()
     const found = persons.find(p => p.name === newName)
@@ -32,6 +29,10 @@ const App = () => {
       personService.create(person)
       .then(person => {
         setPersons([...persons, person])
+        setNotificationMessage(`Added ${person.name}`)
+        setTimeout(()=>{
+          setNotificationMessage(null)
+        }, 3000)
       })
     } else {
       const result = confirm(`${newName} is already added to phonebook, replace the old number with this one?`)
@@ -40,6 +41,10 @@ const App = () => {
         .then(person => {
           const newPersons = persons.map( p => p.id === person.id ? person : p)
           setPersons(newPersons)
+          setNotificationMessage(`Modified ${person.name}'s number`)
+          setTimeout(()=>{
+            setNotificationMessage(null)
+          }, 3000)
         })
       }
     }
@@ -74,6 +79,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter value={filter} handleChange={handleChange}/>
       <h3>Add a new</h3>
+      <Notification message={notificationMessage} />
       <PersonForm name={newName} number={newNumber} handleChange={handleChange} handleSubmit={handleSubmit} />
       <h2>Numbers</h2>
       <PersonList persons={persons} filter={filter} handleDelete={handleDelete}/>
